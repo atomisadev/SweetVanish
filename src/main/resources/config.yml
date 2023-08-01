@@ -1,0 +1,21 @@
+#                                        #
+# ***        SweetVanish             *** #
+# *** Plugin developed by atomisadev *** #
+#                                        #
+
+# PlaceholderAPI placeholder list:
+# - %sweetvanish_p% - Gets the player's name, without the prefix
+# - %sweetvanish_displayname% - Gets the player's displayname. If you use Essentials, the display name includes the prefix too
+# - %sweetvanish_prefix% - Gets just the player's prefix (NOTE: Requires Vault). Returns null if no prefix is defined
+# - %sweetvanish_suffix% - Gets just the player's suffix (NOTE: Also requires Vault). Returns null if no suffix is defined
+# - %sweetvanish_group% - Gets the player's group (NOTE: Also requires Vault)
+#
+#
+# Important:
+# If you are not using PlaceholderAPI, there is only one default placeholder, and that is: {PLAYER}. This is similar to the %sweetvanish_p% PlaceholderAPI placeholder, which will return just the player's name.
+# it is highly recommended if you to install PlaceholderAPI, as it'll allow support for placeholders from any ECloud expansion.
+#
+
+
+quit_message: "&e{PLAYER} left the game"
+join_message: "&e{PLAYER} joined the game"

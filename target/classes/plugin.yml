@@ -1,0 +1,12 @@
+name: SweetVanish
+version: '1.0-SNAPSHOT'
+main: me.atomisadev.sweetvanish.SweetVanish
+api-version: '1.20'
+commands:
+  vanish:
+    description: Vanishes a player so they can't be seen by others
+    aliases: ['v']
+  sweetvanish:
+    description: The main command with all the options
+    aliases: ['sv']
+    permission: sv.use
