@@ -1,19 +1,15 @@
 package me.atomisadev.sweetvanish.handlers;
 
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.BlockPosition;
 import me.atomisadev.sweetvanish.SweetVanish;
 import me.atomisadev.sweetvanish.commands.MainCommand;
 import me.atomisadev.sweetvanish.commands.VanishCommand;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class VanishHandler implements Listener {
@@ -51,6 +47,18 @@ public class VanishHandler implements Listener {
         Player player = event.getPlayer();
         if (vanishCommand.isPlayerVanished(player.getUniqueId())) {
             event.setQuitMessage(null);
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        MainCommand mainCommand = SweetVanish.getInstance().getMainCommand();
+
+        if (SweetVanish.getInstance().getVanishCommand().isPlayerVanished(player.getUniqueId()) && !mainCommand.canPlayerBreakBlocks(player.getUniqueId())) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You have breaking blocks disabled. Turn it back on using " + ChatColor.YELLOW + "/sv break" + ChatColor.RED + ".");
+            player.getWorld().playEffect(event.getBlock().getLocation().add(0, 1, 0), Effect.SMOKE, 0);
         }
     }
 }

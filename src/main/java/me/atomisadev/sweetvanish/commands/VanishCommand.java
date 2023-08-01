@@ -1,9 +1,5 @@
 package me.atomisadev.sweetvanish.commands;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.atomisadev.sweetvanish.SweetVanish;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,13 +12,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class VanishCommand implements CommandExecutor {
 
@@ -31,11 +27,9 @@ public class VanishCommand implements CommandExecutor {
     private static final long VANISH_COMMAND_COOLDOWN = 5;
     private Map<UUID, Long> commandCooldowns = new HashMap<>();
     private File vanishedPlayersFile;
-    private ProtocolManager protocolManager;
 
-    public VanishCommand(ProtocolManager protocolManager) {
+    public VanishCommand() {
         vanishedPlayersFile = new File(SweetVanish.getInstance().getDataFolder(), "data.yml");
-        this.protocolManager = protocolManager;
     }
 
     @Override
@@ -75,7 +69,6 @@ public class VanishCommand implements CommandExecutor {
                 onlinePlayer.hidePlayer(SweetVanish.getInstance(), player);
             } else {
                 onlinePlayer.showPlayer(SweetVanish.getInstance(), player);
-                changePlayerNameplate(player, ChatColor.GRAY + "" + ChatColor.ITALIC + player.getName());
             }
         }
         vanishedPlayers.add(player.getUniqueId());
@@ -91,7 +84,6 @@ public class VanishCommand implements CommandExecutor {
     public void unvanishPlayer(Player player) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.showPlayer(SweetVanish.getInstance(), player);
-            resetPlayerNameplate(player);
         }
         vanishedPlayers.remove(player.getUniqueId());
         player.sendMessage(ChatColor.GREEN + "You are now visible to other players.");
@@ -101,26 +93,6 @@ public class VanishCommand implements CommandExecutor {
         }
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', joinMessage));
         sendActionBarMessage(player);
-    }
-
-    private void changePlayerNameplate(Player player, String newName) {
-        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-        packet.getIntegers().write(0, player.getEntityId());
-        WrappedChatComponent component = WrappedChatComponent.fromText(newName);
-        packet.getChatComponents().write(0, component);
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission("sweetvanish.bypass")) {
-                try {
-                    protocolManager.sendServerPacket(onlinePlayer, packet);
-                } catch (Exception e) {
-                    throw new RuntimeException("Cannot send packet " + packet, e);
-                }
-            }
-        }
-    }
-
-    private void resetPlayerNameplate(Player player) {
-        changePlayerNameplate(player, player.getName());
     }
 
     public void saveVanishedPlayers() {
@@ -184,5 +156,7 @@ public class VanishCommand implements CommandExecutor {
             }
         }
     }
+
+
 
 }

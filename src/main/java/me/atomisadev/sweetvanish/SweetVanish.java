@@ -1,14 +1,11 @@
 package me.atomisadev.sweetvanish;
 
-import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import me.atomisadev.sweetvanish.commands.MainCommand;
 import me.atomisadev.sweetvanish.commands.VanishCommand;
 import me.atomisadev.sweetvanish.expansions.SweetVanishExpansions;
 import me.atomisadev.sweetvanish.handlers.VanishChestHandler;
 import me.atomisadev.sweetvanish.handlers.VanishHandler;
-import me.atomisadev.sweetvanish.handlers.VanishTablistHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,16 +14,12 @@ public final class SweetVanish extends JavaPlugin {
     private static SweetVanish instance;
     private VanishCommand vanishCommand;
     private MainCommand mainCommand;
-    private ProtocolManager protocolManager;
-
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        this.protocolManager = ProtocolLibrary.getProtocolManager();
 
-
-        vanishCommand = new VanishCommand(protocolManager);
+        vanishCommand = new VanishCommand();
         mainCommand = new MainCommand();
 
         getCommand("vanish").setExecutor(vanishCommand);

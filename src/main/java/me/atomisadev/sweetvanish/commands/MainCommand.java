@@ -14,6 +14,7 @@ import java.util.UUID;
 public class MainCommand implements CommandExecutor {
 
     private HashSet<UUID> noPickupPlayers = new HashSet<>();
+    private HashSet<UUID> noBreakPlayers = new HashSet<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -56,13 +57,28 @@ public class MainCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
                     }
                     break;
+                case "break":
+                    if (!sender.hasPermission("sweetvanish.break")) {
+                        player.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
+                    }
+                    if (!noBreakPlayers.contains(player.getUniqueId())) {
+                        noBreakPlayers.add(player.getUniqueId());
+                        player.sendMessage(ChatColor.GREEN + "You will not be able to break blocks in vanish.");
+                    } else {
+                        noBreakPlayers.remove(player.getUniqueId());
+                        player.sendMessage(ChatColor.GREEN + "YOu will be able to break blocks in vanish.");
+                    }
+                    break;
             }
         }
-        // Other command cases...
         return false;
     }
 
     public boolean canPlayerPickupItems(UUID uuid) {
         return !noPickupPlayers.contains(uuid);
+    }
+
+    public boolean canPlayerBreakBlocks(UUID uuid) {
+        return !noBreakPlayers.contains(uuid);
     }
 }
